@@ -1,7 +1,8 @@
-import { Search, Clock, Star, ShoppingBag, User, Home, Package } from 'lucide-react';
+import { Search, Clock, Star, ShoppingBag, User, Home, Package, X } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Screen } from '../App';
 import { Order, getOrderProgress, formatOrderStatus } from '../services/api';
+import { useState, useMemo } from 'react';
 
 interface HomeScreenProps {
   onNavigate: (screen: Screen) => void;
@@ -10,6 +11,54 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ onNavigate, cartItemCount, activeOrder }: HomeScreenProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Define restaurants data
+  const restaurants = [
+    {
+      name: "Proxy",
+      image: "https://images.unsplash.com/photo-1722125680299-783f98369451?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwZm9vZCUyMGJ1cmdlcnxlbnwxfHx8fDE3NjM2MDI5NTF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+      time: "15–20 min",
+      status: "open" as const,
+      rating: 4.8,
+    },
+    {
+      name: "L'Italien",
+      image: "https://images.unsplash.com/photo-1649817253654-4d356cdc4662?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1lYWx8ZW58MXx8fHwxNzYzNjM2MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+      time: "20–25 min",
+      status: "busy" as const,
+      rating: 4.6,
+    },
+    {
+      name: "L'Américain",
+      image: "https://images.unsplash.com/photo-1722125680299-783f98369451?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwZm9vZCUyMGJ1cmdlcnxlbnwxfHx8fDE3NjM2MDI5NTF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+      time: "10–15 min",
+      status: "open" as const,
+      rating: 4.9,
+    },
+    {
+      name: "L'International",
+      image: "https://images.unsplash.com/photo-1651352650142-385087834d9d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxhZCUyMGhlYWx0aHklMjBmb29kfGVufDF8fHx8MTc2MzU5ODUwMHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+      time: "15–20 min",
+      status: "open" as const,
+      rating: 4.7,
+    },
+  ];
+
+  // Filter restaurants based on search query
+  const filteredRestaurants = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return restaurants;
+    }
+    return restaurants.filter(restaurant =>
+      restaurant.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+  };
+
   return (
     <div className="h-full bg-[#F8F9FA] overflow-y-auto pb-24">
       {/* Header */}
@@ -24,8 +73,18 @@ export default function HomeScreen({ onNavigate, cartItemCount, activeOrder }: H
           <input
             type="text"
             placeholder="Search meals or restaurants"
-            className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl shadow-lg outline-none text-[#1F2937] placeholder:text-[#9CA3AF]"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-12 py-4 bg-white rounded-2xl shadow-lg outline-none text-[#1F2937] placeholder:text-[#9CA3AF]"
           />
+          {searchQuery && (
+            <button
+              onClick={handleClearSearch}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B7280] hover:text-[#1F2937] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -55,40 +114,25 @@ export default function HomeScreen({ onNavigate, cartItemCount, activeOrder }: H
       {/* Today's Restaurants */}
       <div className="px-6 mb-6">
         <h3 className="text-[#1F2937] mb-4">Today's Restaurants</h3>
-        <div className="flex space-x-4 overflow-x-auto pb-2 -mx-6 px-6 scrollbar-hide">
-          <RestaurantCard
-            name="Proxy"
-            image="https://images.unsplash.com/photo-1722125680299-783f98369451?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwZm9vZCUyMGJ1cmdlcnxlbnwxfHx8fDE3NjM2MDI5NTF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-            time="15–20 min"
-            status="open"
-            rating={4.8}
-            onClick={() => onNavigate('restaurant')}
-          />
-          <RestaurantCard
-            name="L'Italien"
-            image="https://images.unsplash.com/photo-1649817253654-4d356cdc4662?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1lYWx8ZW58MXx8fHwxNzYzNjM2MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-            time="20–25 min"
-            status="busy"
-            rating={4.6}
-            onClick={() => onNavigate('restaurant')}
-          />
-          <RestaurantCard
-            name="L'Américain"
-            image="https://images.unsplash.com/photo-1722125680299-783f98369451?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwZm9vZCUyMGJ1cmdlcnxlbnwxfHx8fDE3NjM2MDI5NTF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-            time="10–15 min"
-            status="open"
-            rating={4.9}
-            onClick={() => onNavigate('restaurant')}
-          />
-          <RestaurantCard
-            name="L'International"
-            image="https://images.unsplash.com/photo-1651352650142-385087834d9d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxhZCUyMGhlYWx0aHklMjBmb29kfGVufDF8fHx8MTc2MzU5ODUwMHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-            time="15–20 min"
-            status="open"
-            rating={4.7}
-            onClick={() => onNavigate('restaurant')}
-          />
-        </div>
+        {filteredRestaurants.length > 0 ? (
+          <div className="flex space-x-4 overflow-x-auto pb-2 -mx-6 px-6 scrollbar-hide">
+            {filteredRestaurants.map((restaurant) => (
+              <RestaurantCard
+                key={restaurant.name}
+                name={restaurant.name}
+                image={restaurant.image}
+                time={restaurant.time}
+                status={restaurant.status}
+                rating={restaurant.rating}
+                onClick={() => onNavigate('restaurant')}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-[#6B7280]">No restaurants found matching "{searchQuery}"</p>
+          </div>
+        )}
       </div>
 
       {/* Recommended Items */}
