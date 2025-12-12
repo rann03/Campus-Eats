@@ -1,7 +1,7 @@
 import { Search, Clock, Star, ShoppingBag, User, Home, Package } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Screen } from '../App';
-import { Order, getOrderProgress } from '../services/api';
+import { Order, getOrderProgress, formatOrderStatus } from '../services/api';
 
 interface HomeScreenProps {
   onNavigate: (screen: Screen) => void;
@@ -37,7 +37,7 @@ export default function HomeScreen({ onNavigate, cartItemCount, activeOrder }: H
               <Package className="w-6 h-6 text-[#FFB703]" />
             </div>
             <div className="flex-1">
-              <p className="text-[#1F2937]">Your Order #{activeOrder.orderNumber} is {activeOrder.status.replace('-', ' ')}</p>
+              <p className="text-[#1F2937]">Your Order #{activeOrder.orderNumber} is {formatOrderStatus(activeOrder.status)}</p>
               <div className="w-full h-2 bg-[#F3F4F6] rounded-full mt-2 overflow-hidden">
                 <div className="h-full bg-[#FFB703] rounded-full" style={{ width: `${getOrderProgress(activeOrder.status)}%` }}></div>
               </div>

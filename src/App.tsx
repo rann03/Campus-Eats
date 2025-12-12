@@ -15,6 +15,9 @@ import OrderConfirmation from './components/OrderConfirmation';
 import OrderActiveSummary from './components/OrderActiveSummary';
 import { Order, getActiveOrder } from './services/api';
 
+// Default user ID for development
+const DEFAULT_USER_ID = 'user1';
+
 export type Screen = 
   | 'splash' 
   | 'login' 
@@ -45,7 +48,7 @@ export default function App() {
   const [isCourierMode, setIsCourierMode] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash'>('card');
   const [activeOrder, setActiveOrder] = useState<Order | null>(null);
-  const [userId, setUserId] = useState<string>('user1');
+  const [userId, setUserId] = useState<string>(DEFAULT_USER_ID);
 
   const navigateTo = (screen: Screen) => {
     setCurrentScreen(screen);

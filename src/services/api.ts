@@ -44,6 +44,19 @@ export interface User {
   address: string;
 }
 
+// Helper function to format order status for display
+export function formatOrderStatus(status: Order['status']): string {
+  const statusMap: Record<Order['status'], string> = {
+    'pending': 'pending',
+    'preparing': 'being prepared',
+    'ready': 'ready for pickup',
+    'picked-up': 'picked up',
+    'delivering': 'out for delivery',
+    'delivered': 'delivered',
+  };
+  return statusMap[status] || status;
+}
+
 // Helper function to handle API errors
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
