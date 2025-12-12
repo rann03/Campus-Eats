@@ -28,9 +28,15 @@ async function writeOrders(orders) {
 router.post('/', async (req, res) => {
   try {
     const orders = await readOrders();
+    // Generate unique ID based on timestamp and random value to avoid collisions
+    const newId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const newOrderNumber = orders.length > 0 
+      ? Math.max(...orders.map(o => o.orderNumber || 0)) + 1 
+      : 1;
+    
     const newOrder = {
-      id: String(orders.length + 1),
-      orderNumber: orders.length + 1,
+      id: newId,
+      orderNumber: newOrderNumber,
       ...req.body,
       status: 'pending',
       createdAt: new Date().toISOString(),

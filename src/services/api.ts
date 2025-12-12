@@ -106,7 +106,12 @@ export async function getOrder(id: string): Promise<Order> {
 
 export async function getActiveOrder(userId: string): Promise<Order | null> {
   const response = await fetch(`${API_URL}/api/orders/user/${userId}/active`);
-  return handleResponse<Order | null>(response);
+  if (!response.ok) {
+    // If there's an error fetching, return null instead of throwing
+    console.error('Failed to fetch active order:', response.status);
+    return null;
+  }
+  return response.json();
 }
 
 export async function updateOrderStatus(id: string, status: Order['status']): Promise<Order> {
