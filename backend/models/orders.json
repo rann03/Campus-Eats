@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": "1765556047567-3sxt4uj6f",
+    "orderNumber": 1,
+    "userId": "user1",
+    "restaurantId": "1",
+    "items": [
+      {
+        "id": "1",
+        "name": "Burger",
+        "price": 50,
+        "quantity": 1
+      }
+    ],
+    "total": 50,
+    "status": "delivered",
+    "createdAt": "2025-12-12T16:14:07.567Z",
+    "updatedAt": "2025-12-12T16:14:38.215Z"
+  }
+]
