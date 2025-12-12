@@ -5,16 +5,18 @@ import { useState } from 'react';
 import ActiveOrderBanner from './ActiveOrderBanner';
 import NewOrderConfirmationModal from './NewOrderConfirmationModal';
 
+import { Order } from '../services/api';
+
 interface RestaurantMenuProps {
   onBack: () => void;
   onNavigate: (screen: Screen) => void;
   onAddToCart: (item: Omit<CartItem, 'quantity'>) => void;
   cartItemCount: number;
+  activeOrder?: Order | null;
 }
 
-export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartItemCount }: RestaurantMenuProps) {
+export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartItemCount, activeOrder }: RestaurantMenuProps) {
   const [activeCategory, setActiveCategory] = useState('Popular');
-  const [showActiveOrderBanner, setShowActiveOrderBanner] = useState(true);
   const [showNewOrderModal, setShowNewOrderModal] = useState(false);
 
   const handleResumeOrder = () => {
@@ -26,7 +28,6 @@ export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartIt
   };
 
   const confirmNewOrder = () => {
-    setShowActiveOrderBanner(false);
     setShowNewOrderModal(false);
   };
 
@@ -38,28 +39,28 @@ export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartIt
         id: '1',
         name: 'Shawarma',
         description: 'Tender marinated meat wrapped with fresh vegetables',
-        price: 45,
+        price: 40,
         image: 'https://images.unsplash.com/photo-1721980743519-01f627e7b4b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW5kd2ljaCUyMGZvb2R8ZW58MXx8fHwxNzYzNjAyNDI0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       },
       {
         id: '2',
         name: 'Shawarma Box',
         description: 'Shawarma served over rice with sides',
-        price: 55,
+        price: 50,
         image: 'https://images.unsplash.com/photo-1721980743519-01f627e7b4b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW5kd2ljaCUyMGZvb2R8ZW58MXx8fHwxNzYzNjAyNDI0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       },
       {
         id: '3',
         name: 'Pizza Margarita',
         description: 'Fresh mozzarella, basil, and tomato sauce',
-        price: 50,
+        price: 65,
         image: 'https://images.unsplash.com/photo-1649817253654-4d356cdc4662?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1lYWx8ZW58MXx8fHwxNzYzNjM2MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       },
       {
         id: '4',
         name: 'Frosty Fries',
-        description: 'Crispy golden fries',
-        price: 20,
+        description: 'Crispy golden fries with seasoning',
+        price: 15,
         image: 'https://images.unsplash.com/photo-1722125680299-783f98369451?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwZm9vZCUyMGJ1cmdlcnxlbnwxfHx8fDE3NjM2MDI5NTF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       }
     ],
@@ -68,13 +69,20 @@ export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartIt
         id: '5',
         name: 'Shawarma',
         description: 'Tender marinated meat wrapped with fresh vegetables',
-        price: 45,
+        price: 40,
         image: 'https://images.unsplash.com/photo-1721980743519-01f627e7b4b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW5kd2ljaCUyMGZvb2R8ZW58MXx8fHwxNzYzNjAyNDI0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       },
       {
         id: '6',
         name: 'Mexican Wrap',
         description: 'Spicy chicken with peppers and Mexican spices',
+        price: 45,
+        image: 'https://images.unsplash.com/photo-1721980743519-01f627e7b4b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW5kd2ljaCUyMGZvb2R8ZW58MXx8fHwxNzYzNjAyNDI0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+      },
+      {
+        id: '13',
+        name: 'Club Sandwich',
+        description: 'Triple-decker with chicken, bacon, and fresh veggies',
         price: 48,
         image: 'https://images.unsplash.com/photo-1721980743519-01f627e7b4b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW5kd2ljaCUyMGZvb2R8ZW58MXx8fHwxNzYzNjAyNDI0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       }
@@ -84,15 +92,22 @@ export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartIt
         id: '7',
         name: 'Bolognaise Pasta',
         description: 'Classic meat sauce with herbs',
-        price: 55,
+        price: 60,
         image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMGRpc2h8ZW58MXx8fHwxNzY1NDYzNjQ2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       },
       {
         id: '8',
         name: 'Carbonara Pasta',
         description: 'Creamy sauce with bacon and parmesan',
-        price: 60,
+        price: 70,
         image: 'https://images.unsplash.com/photo-1633337474564-1d9478ca4e2e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzcGFnaGV0dGklMjBjYXJib25hcmF8ZW58MXx8fHwxNzY1NDU4ODE3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+      },
+      {
+        id: '14',
+        name: 'Alfredo Pasta',
+        description: 'Rich and creamy Alfredo sauce with grilled chicken',
+        price: 65,
+        image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMGRpc2h8ZW58MXx8fHwxNzY1NDYzNjQ2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       }
     ],
     'Pizza': [
@@ -100,28 +115,28 @@ export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartIt
         id: '9',
         name: 'Pizza Viande Hachée',
         description: 'Ground beef with mozzarella and tomato sauce',
-        price: 55,
+        price: 70,
         image: 'https://images.unsplash.com/photo-1649817253654-4d356cdc4662?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1lYWx8ZW58MXx8fHwxNzYzNjM2MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       },
       {
         id: '10',
         name: 'Pizza Poulet',
         description: 'Grilled chicken with vegetables',
-        price: 55,
+        price: 70,
         image: 'https://images.unsplash.com/photo-1649817253654-4d356cdc4662?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1lYWx8ZW58MXx8fHwxNzYzNjM2MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       },
       {
         id: '11',
         name: 'Pizza Margarita',
         description: 'Fresh mozzarella, basil, and tomato sauce',
-        price: 50,
+        price: 65,
         image: 'https://images.unsplash.com/photo-1649817253654-4d356cdc4662?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1lYWx8ZW58MXx8fHwxNzYzNjM2MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       },
       {
         id: '12',
         name: 'Pizza Charcuterie',
         description: 'Assorted Italian meats and cheese',
-        price: 60,
+        price: 75,
         image: 'https://images.unsplash.com/photo-1649817253654-4d356cdc4662?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1lYWx8ZW58MXx8fHwxNzYzNjM2MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
       }
     ]
@@ -194,8 +209,8 @@ export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartIt
 
       {/* Menu Items */}
       <div className="flex-1 overflow-y-auto pb-24">
-        {/* Active Order Banner */}
-        {showActiveOrderBanner && (
+        {/* Active Order Banner - only show if there's an active order */}
+        {activeOrder && (
           <ActiveOrderBanner
             onResumeOrder={handleResumeOrder}
             onStartNew={handleStartNewOrder}

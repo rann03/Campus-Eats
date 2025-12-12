@@ -132,6 +132,7 @@ export default function App() {
             onNavigate={navigateTo}
             onAddToCart={addToCart}
             cartItemCount={cartItems.length}
+            activeOrder={activeOrder}
           />
         )}
         {currentScreen === 'cart' && (
@@ -144,7 +145,10 @@ export default function App() {
           />
         )}
         {currentScreen === 'tracking' && (
-          <OrderTracking onBack={() => navigateTo('home')} />
+          <OrderTracking 
+            onBack={() => navigateTo('home')} 
+            activeOrder={activeOrder}
+          />
         )}
         {currentScreen === 'profile' && (
           <ProfileSettings 
@@ -196,6 +200,7 @@ export default function App() {
           <OrderActiveSummary 
             onBack={() => navigateTo('restaurant')}
             onNavigate={navigateTo}
+            activeOrder={activeOrder}
           />
         )}
       </div>
