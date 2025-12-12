@@ -49,11 +49,13 @@ export default function OrderTracking({ onBack, activeOrder }: OrderTrackingProp
     );
   }
 
-  const orderTime = new Date(activeOrder.createdAt).toLocaleTimeString('en-US', { 
-    hour: 'numeric', 
-    minute: '2-digit', 
-    hour12: true 
-  });
+  const orderTime = activeOrder.createdAt 
+    ? new Date(activeOrder.createdAt).toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        hour12: true 
+      })
+    : 'N/A';
 
   return (
     <div className="h-full bg-[#F8F9FA] flex flex-col">
