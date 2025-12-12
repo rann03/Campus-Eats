@@ -1,13 +1,15 @@
 import { Search, Clock, Star, ShoppingBag, User, Home, Package } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Screen } from '../App';
+import { Order, getOrderProgress } from '../services/api';
 
 interface HomeScreenProps {
   onNavigate: (screen: Screen) => void;
   cartItemCount: number;
+  activeOrder?: Order | null;
 }
 
-export default function HomeScreen({ onNavigate, cartItemCount }: HomeScreenProps) {
+export default function HomeScreen({ onNavigate, cartItemCount, activeOrder }: HomeScreenProps) {
   return (
     <div className="h-full bg-[#F8F9FA] overflow-y-auto pb-24">
       {/* Header */}
@@ -28,25 +30,27 @@ export default function HomeScreen({ onNavigate, cartItemCount }: HomeScreenProp
       </div>
 
       {/* Active Order Status */}
-      <div className="px-6 -mt-6 mb-6">
-        <div className="bg-white rounded-2xl p-4 shadow-lg flex items-center space-x-4">
-          <div className="w-12 h-12 rounded-full bg-[#FFB703]/10 flex items-center justify-center">
-            <Package className="w-6 h-6 text-[#FFB703]" />
-          </div>
-          <div className="flex-1">
-            <p className="text-[#1F2937]">Your Order #314 is being prepared</p>
-            <div className="w-full h-2 bg-[#F3F4F6] rounded-full mt-2 overflow-hidden">
-              <div className="h-full w-[65%] bg-[#FFB703] rounded-full"></div>
+      {activeOrder && (
+        <div className="px-6 -mt-6 mb-6">
+          <div className="bg-white rounded-2xl p-4 shadow-lg flex items-center space-x-4">
+            <div className="w-12 h-12 rounded-full bg-[#FFB703]/10 flex items-center justify-center">
+              <Package className="w-6 h-6 text-[#FFB703]" />
             </div>
+            <div className="flex-1">
+              <p className="text-[#1F2937]">Your Order #{activeOrder.orderNumber} is {activeOrder.status.replace('-', ' ')}</p>
+              <div className="w-full h-2 bg-[#F3F4F6] rounded-full mt-2 overflow-hidden">
+                <div className="h-full bg-[#FFB703] rounded-full" style={{ width: `${getOrderProgress(activeOrder.status)}%` }}></div>
+              </div>
+            </div>
+            <button
+              onClick={() => onNavigate('tracking')}
+              className="text-[#2D6A4F]"
+            >
+              Track
+            </button>
           </div>
-          <button
-            onClick={() => onNavigate('tracking')}
-            className="text-[#2D6A4F]"
-          >
-            Track
-          </button>
         </div>
-      </div>
+      )}
 
       {/* Today's Restaurants */}
       <div className="px-6 mb-6">

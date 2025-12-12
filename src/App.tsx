@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SplashScreen from './components/SplashScreen';
 import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
@@ -13,6 +13,7 @@ import PaymentSelection from './components/PaymentSelection';
 import CardEntry from './components/CardEntry';
 import OrderConfirmation from './components/OrderConfirmation';
 import OrderActiveSummary from './components/OrderActiveSummary';
+import { Order, getActiveOrder } from './services/api';
 
 export type Screen = 
   | 'splash' 
@@ -43,10 +44,34 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCourierMode, setIsCourierMode] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash'>('card');
+  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
+  const [userId, setUserId] = useState<string>('user1');
 
   const navigateTo = (screen: Screen) => {
     setCurrentScreen(screen);
+    
+    // Fetch active order when navigating to home
+    if (screen === 'home') {
+      fetchActiveOrder();
+    }
   };
+
+  const fetchActiveOrder = async () => {
+    try {
+      const order = await getActiveOrder(userId);
+      setActiveOrder(order);
+    } catch (error) {
+      console.error('Failed to fetch active order:', error);
+      setActiveOrder(null);
+    }
+  };
+
+  // Fetch active order on mount if already on home screen
+  useEffect(() => {
+    if (currentScreen === 'home') {
+      fetchActiveOrder();
+    }
+  }, [userId]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
     setCartItems(prev => {
@@ -95,6 +120,7 @@ export default function App() {
           <HomeScreen 
             onNavigate={navigateTo}
             cartItemCount={cartItems.length}
+            activeOrder={activeOrder}
           />
         )}
         {currentScreen === 'restaurant' && (
