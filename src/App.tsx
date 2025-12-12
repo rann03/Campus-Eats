@@ -51,6 +51,12 @@ export default function App() {
   const [userId, setUserId] = useState<string>(DEFAULT_USER_ID);
 
   const navigateTo = (screen: Screen) => {
+    // Guard: only allow tracking screen when there's an active order
+    if (screen === 'tracking' && !activeOrder) {
+      console.warn('Cannot navigate to tracking: no active order');
+      return;
+    }
+    
     setCurrentScreen(screen);
     
     // Fetch active order when navigating to home
@@ -132,6 +138,7 @@ export default function App() {
             onNavigate={navigateTo}
             onAddToCart={addToCart}
             cartItemCount={cartItems.length}
+            activeOrder={activeOrder}
           />
         )}
         {currentScreen === 'cart' && (
@@ -144,7 +151,10 @@ export default function App() {
           />
         )}
         {currentScreen === 'tracking' && (
-          <OrderTracking onBack={() => navigateTo('home')} />
+          <OrderTracking 
+            onBack={() => navigateTo('home')} 
+            activeOrder={activeOrder}
+          />
         )}
         {currentScreen === 'profile' && (
           <ProfileSettings 
@@ -190,6 +200,12 @@ export default function App() {
             onNavigate={navigateTo}
             totalAmount={cartTotal}
             paymentMethod={paymentMethod}
+            cartItems={cartItems}
+            userId={userId}
+            onOrderCreated={(order) => {
+              setActiveOrder(order);
+              clearCart();
+            }}
           />
         )}
         {currentScreen === 'order-active-summary' && (

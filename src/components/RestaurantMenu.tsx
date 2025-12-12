@@ -4,17 +4,18 @@ import { Screen, CartItem } from '../App';
 import { useState } from 'react';
 import ActiveOrderBanner from './ActiveOrderBanner';
 import NewOrderConfirmationModal from './NewOrderConfirmationModal';
+import { Order } from '../services/api';
 
 interface RestaurantMenuProps {
   onBack: () => void;
   onNavigate: (screen: Screen) => void;
   onAddToCart: (item: Omit<CartItem, 'quantity'>) => void;
   cartItemCount: number;
+  activeOrder?: Order | null;
 }
 
-export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartItemCount }: RestaurantMenuProps) {
+export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartItemCount, activeOrder }: RestaurantMenuProps) {
   const [activeCategory, setActiveCategory] = useState('Popular');
-  const [showActiveOrderBanner, setShowActiveOrderBanner] = useState(true);
   const [showNewOrderModal, setShowNewOrderModal] = useState(false);
 
   const handleResumeOrder = () => {
@@ -26,7 +27,6 @@ export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartIt
   };
 
   const confirmNewOrder = () => {
-    setShowActiveOrderBanner(false);
     setShowNewOrderModal(false);
   };
 
@@ -194,8 +194,8 @@ export default function RestaurantMenu({ onBack, onNavigate, onAddToCart, cartIt
 
       {/* Menu Items */}
       <div className="flex-1 overflow-y-auto pb-24">
-        {/* Active Order Banner */}
-        {showActiveOrderBanner && (
+        {/* Active Order Banner - only show when there is an active order */}
+        {activeOrder && (
           <ActiveOrderBanner
             onResumeOrder={handleResumeOrder}
             onStartNew={handleStartNewOrder}

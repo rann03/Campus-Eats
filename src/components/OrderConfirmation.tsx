@@ -1,15 +1,28 @@
 import { CheckCircle, Package, MapPin, Clock } from 'lucide-react';
-import { Screen } from '../App';
+import { Screen, CartItem } from '../App';
 import { useEffect, useState } from 'react';
+import { createOrder, Order } from '../services/api';
 
 interface OrderConfirmationProps {
   onNavigate: (screen: Screen) => void;
   totalAmount: number;
   paymentMethod: 'card' | 'cash';
+  cartItems: CartItem[];
+  userId: string;
+  onOrderCreated: (order: Order) => void;
 }
 
-export default function OrderConfirmation({ onNavigate, totalAmount, paymentMethod }: OrderConfirmationProps) {
+export default function OrderConfirmation({ 
+  onNavigate, 
+  totalAmount, 
+  paymentMethod,
+  cartItems,
+  userId,
+  onOrderCreated
+}: OrderConfirmationProps) {
   const [showToast, setShowToast] = useState(true);
+  const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
+  const [isCreating, setIsCreating] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -17,6 +30,46 @@ export default function OrderConfirmation({ onNavigate, totalAmount, paymentMeth
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Create order on mount
+  useEffect(() => {
+    const placeOrder = async () => {
+      try {
+        setIsCreating(true);
+        const orderData = {
+          userId,
+          restaurantId: '1', // Using default restaurant ID
+          items: cartItems.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity
+          })),
+          total: totalAmount
+        };
+        
+        const order = await createOrder(orderData);
+        setCreatedOrder(order);
+        onOrderCreated(order);
+      } catch (error) {
+        console.error('Failed to create order:', error);
+      } finally {
+        setIsCreating(false);
+      }
+    };
+    
+    placeOrder();
+  }, []);
+
+  // Show loading state while creating order
+  if (isCreating || !createdOrder) {
+    return (
+      <div className="h-full bg-[#F8F9FA] flex flex-col items-center justify-center px-6">
+        <div className="w-16 h-16 border-4 border-[#2D6A4F] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-[#6B7280]">Placing your order...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full bg-[#F8F9FA] flex flex-col items-center justify-center px-6">
@@ -39,7 +92,7 @@ export default function OrderConfirmation({ onNavigate, totalAmount, paymentMeth
           <Package className="w-6 h-6 text-[#2D6A4F]" />
           <div className="flex-1">
             <p className="text-[#6B7280]">Order Number</p>
-            <p className="text-[#1F2937]">#314</p>
+            <p className="text-[#1F2937]">#{createdOrder.orderNumber}</p>
           </div>
         </div>
 
