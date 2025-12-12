@@ -101,22 +101,22 @@ export default function HomeScreen({ onNavigate, cartItemCount, activeOrder }: H
           <FoodCard
             name="Shawarma"
             image="https://images.unsplash.com/photo-1721980743519-01f627e7b4b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW5kd2ljaCUyMGZvb2R8ZW58MXx8fHwxNzYzNjAyNDI0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-            price={45}
+            price={40}
           />
           <FoodCard
             name="Pizza Margarita"
             image="https://images.unsplash.com/photo-1649817253654-4d356cdc4662?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1lYWx8ZW58MXx8fHwxNzYzNjM2MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-            price={55}
+            price={65}
           />
           <FoodCard
             name="Cheese Bomb Burger"
             image="https://images.unsplash.com/photo-1722125680299-783f98369451?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwZm9vZCUyMGJ1cmdlcnxlbnwxfHx8fDE3NjM2MDI5NTF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-            price={50}
+            price={60}
           />
           <FoodCard
             name="Salad Bar"
             image="https://images.unsplash.com/photo-1651352650142-385087834d9d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxhZCUyMGhlYWx0aHklMjBmb29kfGVufDF8fHx8MTc2MzU5ODUwMHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-            price={35}
+            price={45}
           />
         </div>
       </div>
@@ -128,8 +128,9 @@ export default function HomeScreen({ onNavigate, cartItemCount, activeOrder }: H
           <span className="text-[#2D6A4F]">Home</span>
         </button>
         <button
-          onClick={() => onNavigate('tracking')}
-          className="flex flex-col items-center space-y-1"
+          onClick={() => activeOrder && onNavigate('tracking')}
+          disabled={!activeOrder}
+          className={`flex flex-col items-center space-y-1 ${!activeOrder ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           <Package className="w-6 h-6 text-[#9CA3AF]" />
           <span className="text-[#9CA3AF]">Orders</span>
